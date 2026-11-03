@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Parcel Map Jičín</title>
+</head>
+<body>
+    <h1>Parcel Map Jičín</h1>
+    <pre id="status">Checking the API…</pre>
+
+    <script>
+        fetch('/api/health')
+            .then((response) => response.json())
+            .then((health) => {
+                document.getElementById('status').textContent = JSON.stringify(health, null, 2);
+            })
+            .catch((error) => {
+                document.getElementById('status').textContent = `API error: ${error.message}`;
+            });
+    </script>
+</body>
+</html>

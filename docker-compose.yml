@@ -1,0 +1,33 @@
+services:
+  app:
+    build: ./docker/app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/app
+    environment:
+      DB_HOST: db
+      DB_NAME: parcels
+      DB_USER: parcels
+      DB_PASSWORD: parcels
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build: ./docker/db
+    environment:
+      POSTGRES_DB: parcels
+      POSTGRES_USER: parcels
+      POSTGRES_PASSWORD: parcels
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parcels -d parcels"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  db-data:
