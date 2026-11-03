@@ -1,6 +1,7 @@
 services:
   app:
     build: ./docker/app
+    working_dir: /var/www/app
     ports:
       - "8080:80"
     volumes:
