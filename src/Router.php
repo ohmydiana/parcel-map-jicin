@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Http\JsonResponse;
+use App\Http\Response;
 
 final class Router
 {
@@ -16,10 +17,10 @@ final class Router
         $this->getRoutes['#^' . $pattern . '$#'] = $handler;
     }
 
-    public function dispatch(string $method, string $path): JsonResponse
+    public function dispatch(string $method, string $path): Response
     {
         if ($method !== 'GET') {
-            return new JsonResponse(['error' => 'Method not allowed'], 405);
+            return new JsonResponse(['error' => 'Metoda není povolena'], 405);
         }
 
         foreach ($this->getRoutes as $pattern => $handler) {
@@ -28,6 +29,6 @@ final class Router
             }
         }
 
-        return new JsonResponse(['error' => 'Not found'], 404);
+        return new JsonResponse(['error' => 'Stránka nebyla nalezena'], 404);
     }
 }

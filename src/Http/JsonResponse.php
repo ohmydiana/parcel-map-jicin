@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
-final class JsonResponse
+final class JsonResponse implements Response
 {
     public function __construct(
         private readonly array $data,

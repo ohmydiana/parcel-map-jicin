@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Parcel Map Jičín</title>
+    <title>Mapa parcel Jičín</title>
 </head>
 <body>
-    <h1>Parcel Map Jičín</h1>
-    <pre id="status">Checking the API…</pre>
+    <h1>Mapa parcel Jičín</h1>
+    <pre id="status">Kontroluji API…</pre>
 
     <script>
         fetch('/api/health')
@@ -16,7 +16,7 @@
                 document.getElementById('status').textContent = JSON.stringify(health, null, 2);
             })
             .catch((error) => {
-                document.getElementById('status').textContent = `API error: ${error.message}`;
+                document.getElementById('status').textContent = `Chyba API: ${error.message}`;
             });
     </script>
 </body>
