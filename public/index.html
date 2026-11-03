@@ -4,20 +4,60 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mapa parcel Jičín</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Mapa parcel Jičín</h1>
-    <pre id="status">Kontroluji API…</pre>
+    <aside class="panel">
+        <header class="panel-header">
+            <h1>Parcely obce Jičín</h1>
+            <p>Jičín, Robousy, Popovice u Jičína, Moravčice a Hubálov</p>
+        </header>
 
-    <script>
-        fetch('/api/health')
-            .then((response) => response.json())
-            .then((health) => {
-                document.getElementById('status').textContent = JSON.stringify(health, null, 2);
-            })
-            .catch((error) => {
-                document.getElementById('status').textContent = `Chyba API: ${error.message}`;
-            });
-    </script>
+        <section class="detail" aria-live="polite">
+            <p id="detail-message" class="detail-message">Kliknutím na parcelu v mapě zobrazíte její údaje.</p>
+
+            <div id="detail-content" hidden>
+                <p class="parcel-label">Parcela</p>
+                <h2 id="parcel-number" class="parcel-number"></h2>
+
+                <dl class="parcel-facts">
+                    <div>
+                        <dt>Katastrální území</dt>
+                        <dd id="parcel-cadastral-area"></dd>
+                    </div>
+                    <div>
+                        <dt>Výměra</dt>
+                        <dd id="parcel-area"></dd>
+                    </div>
+                    <div>
+                        <dt>Druh pozemku</dt>
+                        <dd id="parcel-land-type"></dd>
+                    </div>
+                    <div>
+                        <dt>Způsob využití</dt>
+                        <dd id="parcel-land-use"></dd>
+                    </div>
+                </dl>
+
+                <a id="parcel-ruian-link" class="ruian-link" target="_blank" rel="noopener">Zobrazit v RÚIAN</a>
+                <button id="clear-selection" class="clear-selection" type="button">Zrušit výběr</button>
+            </div>
+        </section>
+
+        <ul class="legend">
+            <li><span class="legend-line legend-line-parcel"></span>Hranice parcely</li>
+            <li><span class="legend-line legend-line-area"></span>Hranice katastrálního území</li>
+        </ul>
+    </aside>
+
+    <main id="map" class="map"></main>
+
+    <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
