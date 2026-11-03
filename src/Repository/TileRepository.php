@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use PDO;
+use Closure;
 
 final class TileRepository
 {
-    public function __construct(private readonly PDO $db)
+    public function __construct(private readonly Closure $connect)
     {
     }
 
     public function findTile(int $z, int $x, int $y): string
     {
-        $statement = $this->db->prepare(<<<SQL
+        $statement = ($this->connect)()->prepare(<<<SQL
             WITH bounds AS (
                 SELECT ST_TileEnvelope(:z, :x, :y) AS geom
             ),
             parcel_features AS (
-                SELECT p.id, p.number, p.land_type_code, ST_AsMVTGeom(p.geom, bounds.geom) AS geom
+                SELECT p.id, p.land_type_code, ST_AsMVTGeom(p.geom, bounds.geom) AS geom
                 FROM parcels p, bounds
                 WHERE p.geom && bounds.geom
             ),

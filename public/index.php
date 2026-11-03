@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Cache\TileCache;
 use App\Controller\HealthController;
 use App\Controller\ParcelController;
 use App\Controller\TileController;
@@ -22,7 +23,7 @@ $router->get('/api/parcels/{id}', static fn (string $id) => (
 )->show($id));
 
 $router->get('/api/tiles/{z}/{x}/{y}', static fn (string $z, string $x, string $y) => (
-    new TileController(new TileRepository(Database::connect()))
+    new TileController(new TileRepository(Database::connect(...)), new TileCache())
 )->show($z, $x, $y));
 
 try {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Cache\TileCache;
 use App\Http\JsonResponse;
 use App\Http\Response;
 use App\Http\TileResponse;
@@ -13,8 +14,10 @@ final class TileController
 {
     private const MAX_ZOOM = 22;
 
-    public function __construct(private readonly TileRepository $tiles)
-    {
+    public function __construct(
+        private readonly TileRepository $tiles,
+        private readonly TileCache $cache,
+    ) {
     }
 
     public function show(string $z, string $x, string $y): Response
@@ -33,6 +36,21 @@ final class TileController
             return new JsonResponse(['error' => 'Neplatné souřadnice dlaždice'], 400);
         }
 
-        return new TileResponse($this->tiles->findTile($zoom, $column, $row));
+        return new TileResponse($this->findCompressedTile($zoom, $column, $row));
+    }
+
+    private function findCompressedTile(int $z, int $x, int $y): string
+    {
+        $cachedTile = $this->cache->get($z, $x, $y);
+
+        if ($cachedTile !== null) {
+            return $cachedTile;
+        }
+
+        $tile = $this->tiles->findTile($z, $x, $y);
+        $compressedTile = $tile === '' ? '' : gzencode($tile);
+        $this->cache->put($z, $x, $y, $compressedTile);
+
+        return $compressedTile;
     }
 }

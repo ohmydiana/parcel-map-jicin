@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Cache\TileCache;
 use App\Database;
 use App\Import\ParcelImporter;
 use App\Import\VfrDownloader;
@@ -19,6 +20,7 @@ echo 'Using ' . basename($zipPath) . "\n";
 
 echo "Importing...\n";
 $counts = (new ParcelImporter(Database::connect()))->import(new VfrReader($zipPath));
+(new TileCache())->clear();
 
 printf(
     "Imported %d cadastral areas and %d parcels in %.1f s\n",
